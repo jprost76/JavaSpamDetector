@@ -29,16 +29,19 @@ public class Extracteur {
 		     mot = ligne.split (" ");
 		     for (int i = 0; i < mot.length; i++)
 		     {
-		    	 System.out.println(mot[i]);
-		         if (toccur.containsKey(mot[i])) 
-		         	{
-		        	int occur=toccur.get(mot[i]).intValue();
-		        	toccur.put(mot[i],occur+1);
-		         	}
-		         else
-		         	{
-		        	 toccur.put(mot[i],1);
-		         	}
+		    	 if (this.pretraitement(mot[i]))
+		    	 {
+		    		System.out.println(mot[i]);
+		         	if (toccur.containsKey(mot[i])) 
+		         		{
+		         			int occur=toccur.get(mot[i]).intValue();
+		         			toccur.put(mot[i],occur+1);
+		         		}
+		         	else
+		         		{
+		         		toccur.put(mot[i],1);
+		         		}
+		    	 }
 		     }
 		}
 	} catch (IOException e) {
@@ -57,6 +60,16 @@ toccur.setNbmail(toccur.getNbmail()+1);
 	}
 	}
 	
+	public boolean pretraitement(String mot)
+	{
+		if (mot.length()>14 || mot.length()==0)
+			return false;
+		if (mot.charAt(0)== '<')
+			return false;
+		if (mot.charAt(mot.length()-1)== '>')
+			return false;
+		return true;
+	}
 	
 }
 
