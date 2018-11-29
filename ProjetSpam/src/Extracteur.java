@@ -60,6 +60,12 @@ toccur.setNbmail(toccur.getNbmail()+1);
 	}
 	}
 	
+	public TableOccur extraireMail(String pmail) {
+		TableOccur tableTemp = new TableOccur();
+		this.extraire(pmail, tableTemp);
+		return tableTemp;
+	}
+	
 	public boolean pretraitement(String mot)
 	{
 		if (mot.length()>14 || mot.length()==0)
