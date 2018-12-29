@@ -7,20 +7,22 @@ import java.util.Iterator;
  * @author jprost
  *
  */
-
-/** nombre minimum d'occurences du mot dans les 2 corpus pour calculer la probabilité **/
-public final int LIM_INF_MOTS = 5;
-
+@SuppressWarnings("serial")
+public class TableProba extends HashMap<String,Float> {
+	
+/**nombre minimum d'occurences du mot dans les 2 corpus pour calculer la probabilité **/
+	public final int LIM_INF_MOTS = 5;
+	
 /** probabilité minimale attribuable à un jeton **/
-public final float PROBA_MIN = 0.01;
-
+	public final float PROBA_MIN = (float)0.01;
+	
 /** probabilité maximale attribuable à un jeton **/
-public final float PROBA_MAX = 0.99;
-
+	public final float PROBA_MAX = (float)0.99;
+	
 /** biais par lequel on multiplie le nombre d'occurences dans le corpus non spam pour limité les faux positifs **/
-public final float BIAIS = 2;
+	public final int BIAIS = 2;
 
-public class TableProba extends HashMap<String,Float>{
+
 /**
  * cree une table associant à chaque jeton contenu dans une des 2 tables passées en entrée
  *  le probabilité que un mail contenant ce jeton soit un spam
