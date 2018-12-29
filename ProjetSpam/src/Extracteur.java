@@ -55,7 +55,8 @@ toccur.setNbmail(toccur.getNbmail()+1);
 	listefichiers=repertoire.list(); 
 	for (int i=0;i<listefichiers.length;i++)
 	{
-		String temp = repertoire.getName() +"/"  + listefichiers[i];
+		//String temp = repertoire.getName() +"/"  + listefichiers[i];
+		String temp = repertoire.getAbsolutePath() +"/"  + listefichiers[i];
 		this.extraire(temp,toccur);
 	}
 	}
