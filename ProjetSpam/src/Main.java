@@ -27,6 +27,13 @@ public class Main {
 		}
 		sc.close();
 		System.out.println("Corpus Extrait !");
-		System.out.println("Il y avait : " + ex.toccurSpam.getNbmail());
+		if (chx==1) {
+			System.out.println("Il y avait : " + ex.toccurSpam.getNbmail() +"mail");
+			ex.toccurSpam.AfficherTrier();
+		} else {
+			System.out.println("Il y avait : " + ex.toccurHam.getNbmail() +"mail");
+			ex.toccurHam.AfficherTrier();
+		}
+		
 	}
 }
