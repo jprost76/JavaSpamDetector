@@ -1,3 +1,8 @@
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -6,7 +11,7 @@ import java.util.TreeSet;
 
 
 @SuppressWarnings("serial")
-public class TableOccur extends HashMap<String,Integer> {
+public class TableOccur extends HashMap<String,Integer> implements Serializable {
 	int nbMail;
 	
 	TableOccur(){
@@ -46,6 +51,19 @@ public class TableOccur extends HashMap<String,Integer> {
 		}
 	}
 	
+	/** enregistre la table dans le fichier en paramètre **/ 
+	public void save(File fic) {
+		try {
+			FileOutputStream flux = new FileOutputStream(fic);
+			ObjectOutputStream writer = new ObjectOutputStream(flux);
+			writer.writeObject(this);
+			writer.close();
+			System.out.println("table enregistrée dans "+fic.getAbsolutePath());
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
 	public void Afficher() {
 		Iterator<HashMap.Entry<String, Integer>> it = this.entrySet().iterator();
 		while (it.hasNext()) {
@@ -72,7 +90,7 @@ public class TableOccur extends HashMap<String,Integer> {
 			table = uneTable;
 		}
 		
-		/** retourne 1 si j1 a plus d'occurence j2, 0 sinon **/
+		/** retourne 1 si j1 a plus d'occurence j2, 0 si j1 a autant d'occurence que j2, -1 sinon **/
 		public int compare(String j1, String j2) {
 			int occ1 = table.getOrDefault(j1, 0);
 			int occ2 = table.getOrDefault(j2, 0);
