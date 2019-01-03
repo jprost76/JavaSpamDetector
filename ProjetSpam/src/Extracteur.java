@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Set;
 
 public class Extracteur {
 
@@ -31,7 +33,6 @@ public class Extracteur {
 		     {
 		    	 if (this.pretraitement(mot[i]))
 		    	 {
-		    		System.out.println(mot[i]);
 		         	if (toccur.containsKey(mot[i])) 
 		         		{
 		         			int occur=toccur.get(mot[i]).intValue();
@@ -53,6 +54,7 @@ toccur.setNbmail(toccur.getNbmail()+1);
 	public void extraireCorpus(File repertoire,TableOccur toccur) {
 	String [] listefichiers; 
 	listefichiers=repertoire.list(); 
+	System.out.println(listefichiers.length);
 	for (int i=0;i<listefichiers.length;i++)
 	{
 		//String temp = repertoire.getName() +"/"  + listefichiers[i];
@@ -61,10 +63,15 @@ toccur.setNbmail(toccur.getNbmail()+1);
 	}
 	}
 	
-	public TableOccur extraireMail(String pmail) {
+	public ArrayList<String> extraireMail(String pmail) {
 		TableOccur tableTemp = new TableOccur();
 		this.extraire(pmail, tableTemp);
-		return tableTemp;
+		ArrayList<String> motMail = new ArrayList<String>();
+		Set<String> key= tableTemp.keySet();
+		for (String s : key) {
+			motMail.add(s);
+		}
+		return motMail;
 	}
 	
 	public boolean pretraitement(String mot)

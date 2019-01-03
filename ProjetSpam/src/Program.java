@@ -3,15 +3,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 
 
 public class Program {
 	
 	/** chemin d'accès au fichier de la table d'occurence des Spam **/
-	private final String PATH_SPAM = "res/TableSpam";
+	private final  String PATH_SPAM = "res/TableSpam";
 	
 	/** chemin d'accès au fichier de la table d'occurence des Ham **/
-	private final String PATH_HAM = "res/TableHam";
+	private final  String PATH_HAM = "res/TableHam";
+	
+	/** chemin d'accès au rep de test **/
+	private final  String PATH_TEST = "src/Spam/1.txt";
 	
 	private TableOccur toccurSpam;
 	
@@ -57,14 +61,15 @@ public class Program {
 		flux.close();
 	}
 	
-	public void setPredicteur() {
+	public Predicteur setPredicteur() {
 		try {
-			TableProba tproba = new TableProba(toccurSpam,toccurHam);
+			TableProba tproba = new TableProba(this.extracteur.toccurSpam,this.extracteur.toccurHam);
 			predicteur = new Predicteur(tproba);
+			return predicteur;
 		} catch (TableNonInitException ex) {
 			ex.printStackTrace();
 		}
-		
+		return null;
 	}
 	
 	/**
@@ -78,7 +83,7 @@ public class Program {
 			prog.toccurSpam.AfficherTrier();
 		}
 		catch (FileNotFoundException exf) {
-			System.out.println("fichier non trouvé");
+			System.out.println("fichier non trouv�");
 		}
 		catch (ClassNotFoundException exc) {
 			System.out.println("fichier non valide");
@@ -101,8 +106,18 @@ public class Program {
 			ex.printStackTrace();
 		}
 		// création du prédicteur*/
-		prog.setPredicteur();
-		System.out.println("Predicteur crée");
+		/*File fic = new File(PATH_HAM);
+		prog.extracteur.extraireCorpus(fic,prog.extracteur.toccurHam);
+		File fic2 = new File(PATH_SPAM);
+		prog.extracteur.extraireCorpus(fic2,prog.extracteur.toccurSpam);
+		File f = new File("TableSpam");
+		prog.extracteur.toccurSpam.save(f);
+		File f2 = new File("TableHam");
+		prog.extracteur.toccurHam.save(f2);
+		Predicteur pred = prog.setPredicteur();
+		ArrayList<String> test = prog.extracteur.extraireMail(PATH_TEST);
+		float res = pred.probaSpam(test);
+		System.out.println(res);*/
 		
 	}
 

@@ -75,6 +75,8 @@ public class Predicteur {
 			prodSpam = prodSpam * listeProba[i];
 			prodHam = prodHam * (1-listeProba[i]); 
 		}
+		System.out.println(prodSpam);
+		System.out.println(prodHam);
 	return prodSpam/(prodSpam+prodHam);
 	}
 }

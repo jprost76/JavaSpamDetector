@@ -53,9 +53,9 @@ public class TableProba extends HashMap<String,Float> implements Serializable {
 				} 
 				if (occHam + occSpam >= LIM_INF_MOTS) {
 					//pjs : prob que le jeton appartienne au mail sachant que ce mail est un spam
-					float pjs = Math.min(1,occSpam/NbSpam);	
+					float pjs = Math.min(1.f,(float)occSpam/NbSpam);	
 					//pjh : prob que le jeton appartienne au mail sachant que ce mail est un ham
-					float pjh = Math.min(1,occHam/NbHam);
+					float pjh = Math.min(1.f,(float)occHam/NbHam);
 					float psj = Math.max( Math.min(pjs/(pjs+pjh), PROBA_MAX) , PROBA_MIN ); 
 					this.put(jeton,psj);
 				}
@@ -73,10 +73,11 @@ public class TableProba extends HashMap<String,Float> implements Serializable {
 					}
 					if ( occSpam + occHam >= LIM_INF_MOTS ) {
 						//pjs : prob que le jeton appartienne au mail sachant que ce mail est un spam
-						float pjs = Math.min(1,occSpam/NbSpam);	
+						float pjs = Math.min(1.f,(float)occSpam/NbSpam);	
 						//pjh : prob que le jeton appartienne au mail sachant que ce mail est un ham
-						float pjh = Math.min(1,occHam/NbHam);
+						float pjh = Math.min(1.f,(float)occHam/NbHam);
 						float psj = Math.max( Math.min(pjs/(pjs+pjh), PROBA_MAX) , PROBA_MIN ); 
+						System.out.println(psj);
 						this.put(jeton,psj);
 					}
 				}
