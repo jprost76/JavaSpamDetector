@@ -15,7 +15,7 @@ public class Program {
 	private final  String PATH_HAM = "res/TableHam";
 	
 	/** chemin d'accès au rep de test **/
-	private final  String PATH_TEST = "src/Spam/1.txt";
+	private final static  String PATH_TEST = "src/Spam/1.txt";
 	
 	private TableOccur toccurSpam;
 	
@@ -63,7 +63,7 @@ public class Program {
 	
 	public Predicteur setPredicteur() {
 		try {
-			TableProba tproba = new TableProba(this.extracteur.toccurSpam,this.extracteur.toccurHam);
+			TableProba tproba = new TableProba(this.toccurSpam,this.toccurHam);
 			predicteur = new Predicteur(tproba);
 			return predicteur;
 		} catch (TableNonInitException ex) {
@@ -113,11 +113,11 @@ public class Program {
 		File f = new File("TableSpam");
 		prog.extracteur.toccurSpam.save(f);
 		File f2 = new File("TableHam");
-		prog.extracteur.toccurHam.save(f2);
+		prog.extracteur.toccurHam.save(f2);*/
 		Predicteur pred = prog.setPredicteur();
 		ArrayList<String> test = prog.extracteur.extraireMail(PATH_TEST);
 		float res = pred.probaSpam(test);
-		System.out.println(res);*/
+		System.out.println(res);
 		
 	}
 

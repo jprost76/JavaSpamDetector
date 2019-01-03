@@ -38,6 +38,7 @@ public class Predicteur {
 		while (it.hasNext()){
 // recherche de la probablité associé au jeton
 			String jeton = it.next();
+			System.out.println(jeton);
 			float probaJeton;
 			if (tproba.estPresent(jeton)){
 				probaJeton = tproba.obtenirProba(jeton);
@@ -47,8 +48,9 @@ public class Predicteur {
 // insertion de de la proba du jeton dans la liste des proba significatives
 			float distJeton = (float)Math.abs(0.5-probaJeton);
 			int i = 0;
-			while (i < NB_MOTS_SIGNIFICATIFS & distJeton <= listeDistance[i]){
+			while ((i < NB_MOTS_SIGNIFICATIFS) && (distJeton <= listeDistance[i])){
 				i++;
+				System.out.println(i);
 			}
 			if (i < NB_MOTS_SIGNIFICATIFS){
 				// insertion de distJeton dans listeDistance au rang i
