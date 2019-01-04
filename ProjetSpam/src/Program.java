@@ -80,10 +80,11 @@ public class Program {
 		//chargement de la table d'occurence des Spam
 		try {
 			prog.loadTableSpam();
-			prog.toccurSpam.AfficherTrier();
+			//System.out.println("table Spam :");
+			//prog.toccurSpam.AfficherTrier();
 		}
 		catch (FileNotFoundException exf) {
-			System.out.println("fichier non trouvé");
+			System.out.println("fichier non trouvï¿½");
 		}
 		catch (ClassNotFoundException exc) {
 			System.out.println("fichier non valide");
@@ -94,7 +95,8 @@ public class Program {
 		// chargement de la table d'occurence des Ham
 		try {
 			prog.loadTableHam();
-			prog.toccurHam.AfficherTrier();
+			//System.out.println("table Ham :");
+			//prog.toccurHam.AfficherTrier();
 		}
 		catch (FileNotFoundException exf) {
 			System.out.println("fichier non trouvÃ©");
@@ -115,10 +117,12 @@ public class Program {
 		File f2 = new File("TableHam");
 		prog.extracteur.toccurHam.save(f2);*/
 		Predicteur pred = prog.setPredicteur();
+		//pred.getTProba().AfficherTrier(400);
 		ArrayList<String> test = prog.extracteur.extraireMail(PATH_TEST);
-		float res = pred.probaSpam(test);
-		System.out.println(res);
-		
+		prog.predicteur.AfficherJetonsTriees(test);
+		float res1 = pred.probaSpam(test);
+		float res2 = pred.probaSpam2(test);
+		System.out.println(res1+",  "+res2);
 	}
 
 }

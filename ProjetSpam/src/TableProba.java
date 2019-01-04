@@ -58,6 +58,7 @@ public class TableProba extends HashMap<String,Float> implements Serializable {
 					float pjs = Math.min(1.f,(float)occSpam/NbSpam);	
 					//pjh : prob que le jeton appartienne au mail sachant que ce mail est un ham
 					float pjh = Math.min(1.f,(float)occHam/NbHam);
+					//psj : prob que un mail soit un spam sachant que il contient le jeton
 					float psj = Math.max( Math.min(pjs/(pjs+pjh), PROBA_MAX) , PROBA_MIN ); 
 					this.put(jeton,psj);
 				}
@@ -79,7 +80,7 @@ public class TableProba extends HashMap<String,Float> implements Serializable {
 						//pjh : prob que le jeton appartienne au mail sachant que ce mail est un ham
 						float pjh = Math.min(1.f,(float)occHam/NbHam);
 						float psj = Math.max( Math.min(pjs/(pjs+pjh), PROBA_MAX) , PROBA_MIN ); 
-						System.out.println(psj);
+						//System.out.println(psj);
 						this.put(jeton,psj);
 					}
 				}
@@ -117,21 +118,27 @@ public class TableProba extends HashMap<String,Float> implements Serializable {
 		}
 	}
 	
-	/** Affiche la table triée selon la probabilité, dans l'ordre décroissant **/
-	public void AfficherTrier() {
+	/** Affiche n éléments de la table triée selon la probabilité, dans l'ordre décroissant **/
+	public void AfficherTrier(int n) {
 		TreeSet<String> jetonsTries = new TreeSet<String>(new Comparateur(this));
 		jetonsTries.addAll(this.keySet());
 		Iterator<String> it = jetonsTries.descendingIterator();
+		int i = 0;
 		while (it.hasNext()) {
 			String j = it.next();
-			float prob = this.get(j);
-			try {
-				System.out.printf(String.format("%-30s : %-10f",j,prob));
+			if ( (i < (n/2)) || (i > jetonsTries.size()-n/2) ) {
+				float prob = this.get(j);
+				try {
+					System.out.printf(String.format("%-30s : %-10f\n",j,prob));
+				}
+				catch (Exception ex) {
+					System.out.print(j+"    :     "+prob);
+				}
 			}
-			catch (Exception ex) {
-				System.out.print(j+"    :     "+prob);
+			if (i == (int)(n/2)){
+					System.out.println("...");
 			}
-			System.out.println();
+			i++;
 		}
 	}
 	

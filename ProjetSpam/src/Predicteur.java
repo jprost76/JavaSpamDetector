@@ -1,6 +1,8 @@
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 public class Predicteur {
 	
@@ -38,7 +40,6 @@ public class Predicteur {
 		while (it.hasNext()){
 // recherche de la probablité associé au jeton
 			String jeton = it.next();
-			System.out.println(jeton);
 			float probaJeton;
 			if (tproba.estPresent(jeton)){
 				probaJeton = tproba.obtenirProba(jeton);
@@ -79,7 +80,74 @@ public class Predicteur {
 	return prodSpam/(prodSpam+prodHam);
 	}
 	
-	public void AfficherTableProba() {
-		tproba.AfficherTrier();
+	/**
+	 * retourne une map trié des jetons du mail passé en paramètre dans l'ordre de significavité
+	 * @param mail
+	 * @return
+	 */
+	public TreeSet<String> jetonsTriees(ArrayList<String> mail) {
+		TreeSet<String> map = new TreeSet<String>(new Comparateur(tproba));
+		map.addAll(mail);
+		return map;
+	}
+	
+	/** affiche les jetons du plus significatif au moins significatif, et la proba associé**/
+	public void AfficherJetonsTriees(ArrayList<String> mail) {
+		TreeSet<String> jetons = this.jetonsTriees(mail);
+		Iterator<String> it = jetons.descendingIterator();
+		while (it.hasNext()) {
+			String j = it.next();
+			float pj = tproba.getOrDefault(j, DEFAULT_PROB);
+			try {
+				System.out.printf(String.format("%-30s : %-10f\n",j,pj));
+			}
+			catch (Exception ex) {
+				System.out.print(j+"    :     "+pj);
+			}
+		}
+	}
+	
+	public float probaSpam2(ArrayList<String> mail) {
+		TreeSet<String> jetons = this.jetonsTriees(mail);
+		Iterator<String> it = jetons.descendingIterator();
+		int i = 0;
+		float prodSpam = 1;
+		float prodHam = 1;
+		while ((i<NB_MOTS_SIGNIFICATIFS) && (it.hasNext())) {
+			String jet = it.next();
+			float pjet = tproba.getOrDefault(jet,DEFAULT_PROB);
+			prodSpam = prodSpam * pjet;
+			prodHam = prodHam * (1 - pjet);
+			i++;
+		}
+		return prodSpam/(prodSpam+prodHam);
+	}
+	
+	public TableProba getTProba() {
+		return tproba;
+	}
+	
+	/** compare les jetons selon leur "significativité". 
+	 * plus la probabilité d'un jeton est proche de 1 où de 0,
+	 * plus le jeton est significatif
+	 * @author jprost
+	 *
+	 */
+	class Comparateur implements Comparator<String> {
+		
+		private TableProba table;
+		
+		public Comparateur(TableProba uneTable){
+			super();
+			table = uneTable;
+		}
+		
+		public int compare(String j1, String j2) {
+			float p1 = table.getOrDefault(j1, DEFAULT_PROB);
+			float p2 = table.getOrDefault(j2, DEFAULT_PROB);
+			double d1 = Math.abs(0.5-p1);
+			double d2 = Math.abs(0.5-p2);
+			return (d1>d2 ? 1 : (d1 == d2 ? 0 : -1));
+		}
 	}
 }
