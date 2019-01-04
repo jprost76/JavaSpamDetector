@@ -50,7 +50,6 @@ public class Predicteur {
 			int i = 0;
 			while ((i < NB_MOTS_SIGNIFICATIFS) && (distJeton <= listeDistance[i])){
 				i++;
-				System.out.println(i);
 			}
 			if (i < NB_MOTS_SIGNIFICATIFS){
 				// insertion de distJeton dans listeDistance au rang i
@@ -77,8 +76,10 @@ public class Predicteur {
 			prodSpam = prodSpam * listeProba[i];
 			prodHam = prodHam * (1-listeProba[i]); 
 		}
-		System.out.println(prodSpam);
-		System.out.println(prodHam);
 	return prodSpam/(prodSpam+prodHam);
+	}
+	
+	public void AfficherTableProba() {
+		tproba.AfficherTrier();
 	}
 }

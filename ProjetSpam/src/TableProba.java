@@ -3,8 +3,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 /**
  * Cette classe reperesente une table qui a chaque jeton associe une probabilité
@@ -114,5 +116,40 @@ public class TableProba extends HashMap<String,Float> implements Serializable {
 			ex.printStackTrace();
 		}
 	}
+	
+	/** Affiche la table triée selon la probabilité, dans l'ordre décroissant **/
+	public void AfficherTrier() {
+		TreeSet<String> jetonsTries = new TreeSet<String>(new Comparateur(this));
+		jetonsTries.addAll(this.keySet());
+		Iterator<String> it = jetonsTries.descendingIterator();
+		while (it.hasNext()) {
+			String j = it.next();
+			float prob = this.get(j);
+			try {
+				System.out.printf(String.format("%-30s : %-10f",j,prob));
+			}
+			catch (Exception ex) {
+				System.out.print(j+"    :     "+prob);
+			}
+			System.out.println();
+		}
+	}
+	
+	/** classe permettant de comparer 2 jetons selon leur probabilité contenu dans la table en attribut **/
+	class Comparateur implements Comparator<String> {
 		
+		private TableProba table;
+		
+		public Comparateur(TableProba uneTable){
+			super();
+			table = uneTable;
+		}
+		
+		/** retourne 1 si p(j1)> p(j2), 0 si j1 a autant d'occurence que j2, -1 sinon **/
+		public int compare(String j1, String j2) {
+			float p1 = table.getOrDefault(j1, (float)0);
+			float p2 = table.getOrDefault(j2, (float)0);
+			return (p1>p2 ? 1 : (p1 == p2 ? 0 : -1));
+		}
+	}
 }
