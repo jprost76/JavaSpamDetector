@@ -11,9 +11,11 @@ public class Program {
 	/** chemin d'accès au fichier de la table d'occurence des Spam **/
 	private final  String PATH_SPAM = "res/TableSpam";
 	
+	private final  static String CORPUS_SPAM = "corpus/Spam";
 	/** chemin d'accès au fichier de la table d'occurence des Ham **/
 	private final  String PATH_HAM = "res/TableHam";
 	
+	private final  static String CORPUS_HAM = "corpus/Ham";
 	/** chemin d'accès au rep de test **/
 	private final static  String PATH_TEST = "src/Spam/1.txt";
 	
@@ -106,19 +108,27 @@ public class Program {
 			ex.printStackTrace();
 		}
 		// création du prédicteur*/
-		/*File fic = new File(PATH_HAM);
+		/*File fic = new File(CORPUS_HAM);
 		prog.extracteur.extraireCorpus(fic,prog.extracteur.toccurHam);
-		File fic2 = new File(PATH_SPAM);
+		File fic2 = new File(CORPUS_SPAM);
 		prog.extracteur.extraireCorpus(fic2,prog.extracteur.toccurSpam);
 		File f = new File("TableSpam");
 		prog.extracteur.toccurSpam.save(f);
 		File f2 = new File("TableHam");
 		prog.extracteur.toccurHam.save(f2);*/
 		Predicteur pred = prog.setPredicteur();
-		ArrayList<String> test = prog.extracteur.extraireMail(PATH_TEST);
-		float res = pred.probaSpam(test);
-		System.out.println(res);
-		
+		File repertoire = new File("src/Spam");
+		String [] listefichiers; 
+		listefichiers=repertoire.list(); 
+		System.out.println(listefichiers.length);
+		for (int i=0;i<listefichiers.length;i++)
+		{
+			String temp = repertoire.getAbsolutePath() +"/"  + listefichiers[i];
+			ArrayList<String> test = prog.extracteur.extraireMail(temp);
+			float res = pred.probaSpam(test);
+			System.out.println(res);
+		}
+	
 	}
 
 }
