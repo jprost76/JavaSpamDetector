@@ -11,9 +11,11 @@ public class Program {
 	/** chemin d'accès au fichier de la table d'occurence des Spam **/
 	private final  String PATH_SPAM = "res/TableSpam";
 	
+	private final  static String CORPUS_SPAM = "corpus/Spam";
 	/** chemin d'accès au fichier de la table d'occurence des Ham **/
 	private final  String PATH_HAM = "res/TableHam";
 	
+	private final  static String CORPUS_HAM = "corpus/Ham";
 	/** chemin d'accès au rep de test **/
 	private final static  String PATH_TEST = "src/Spam/1.txt";
 	
@@ -72,6 +74,10 @@ public class Program {
 		return null;
 	}
 	
+	public Predicteur getPredicteur() {
+		return predicteur;
+	}
+	
 	/**
 	 * @param args
 	 */
@@ -95,8 +101,8 @@ public class Program {
 		// chargement de la table d'occurence des Ham
 		try {
 			prog.loadTableHam();
-			//System.out.println("table Ham :");
-			//prog.toccurHam.AfficherTrier();
+			System.out.println("table Ham :");
+			prog.toccurHam.AfficherTrier();
 		}
 		catch (FileNotFoundException exf) {
 			System.out.println("fichier non trouvé");
@@ -107,22 +113,22 @@ public class Program {
 		catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		// création du prédicteur*/
-		/*File fic = new File(PATH_HAM);
-		prog.extracteur.extraireCorpus(fic,prog.extracteur.toccurHam);
-		File fic2 = new File(PATH_SPAM);
-		prog.extracteur.extraireCorpus(fic2,prog.extracteur.toccurSpam);
-		File f = new File("TableSpam");
-		prog.extracteur.toccurSpam.save(f);
-		File f2 = new File("TableHam");
-		prog.extracteur.toccurHam.save(f2);*/
+		
 		Predicteur pred = prog.setPredicteur();
-		//pred.getTProba().AfficherTrier(400);
-		ArrayList<String> test = prog.extracteur.extraireMail(PATH_TEST);
-		prog.predicteur.AfficherJetonsTriees(test);
-		float res1 = pred.probaSpam(test);
-		float res2 = pred.probaSpam2(test);
-		System.out.println(res1+",  "+res2);
+		//affichage de la table de probabilité
+		//prog.getPredicteur().getTProba().AfficherTrier(400);
+		File repertoire = new File("src/Spam");
+		String [] listefichiers; 
+		listefichiers=repertoire.list(); 
+		System.out.println(listefichiers.length);
+		for (int i=0;i<listefichiers.length;i++)
+		{
+			String temp = repertoire.getAbsolutePath() +"/"  + listefichiers[i];
+			ArrayList<String> test = prog.extracteur.extraireMail(temp);
+			prog.getPredicteur().AfficherJetonsTriees(test);
+			float res = pred.probaSpam(test);
+			System.out.println("probabilité que le mail soit un spam : "+res);
+		}
 	}
 
 }

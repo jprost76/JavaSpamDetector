@@ -91,7 +91,8 @@ public class Predicteur {
 		return map;
 	}
 	
-	/** affiche les jetons du plus significatif au moins significatif, et la proba associé**/
+	/** affiche les jetons du mail passé en paramètre
+	 *  du plus significatif au moins significatif, et la proba associé**/
 	public void AfficherJetonsTriees(ArrayList<String> mail) {
 		TreeSet<String> jetons = this.jetonsTriees(mail);
 		Iterator<String> it = jetons.descendingIterator();
@@ -105,22 +106,6 @@ public class Predicteur {
 				System.out.print(j+"    :     "+pj);
 			}
 		}
-	}
-	
-	public float probaSpam2(ArrayList<String> mail) {
-		TreeSet<String> jetons = this.jetonsTriees(mail);
-		Iterator<String> it = jetons.descendingIterator();
-		int i = 0;
-		float prodSpam = 1;
-		float prodHam = 1;
-		while ((i<NB_MOTS_SIGNIFICATIFS) && (it.hasNext())) {
-			String jet = it.next();
-			float pjet = tproba.getOrDefault(jet,DEFAULT_PROB);
-			prodSpam = prodSpam * pjet;
-			prodHam = prodHam * (1 - pjet);
-			i++;
-		}
-		return prodSpam/(prodSpam+prodHam);
 	}
 	
 	public TableProba getTProba() {
