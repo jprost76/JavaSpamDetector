@@ -117,18 +117,37 @@ public class Program {
 		File f2 = new File("TableHam");
 		prog.extracteur.toccurHam.save(f2);*/
 		Predicteur pred = prog.setPredicteur();
-		File repertoire = new File("src/Spam");
+		System.out.println(prog.toccurHam.nbMail);
+		System.out.println(prog.toccurSpam.nbMail);
+		File repertoire = new File("src/Spam/verif");
 		String [] listefichiers; 
 		listefichiers=repertoire.list(); 
 		System.out.println(listefichiers.length);
+		int nbHamDetected =0;
+		int nbSpamDetected =0;
+		int doubt =0;
 		for (int i=0;i<listefichiers.length;i++)
 		{
 			String temp = repertoire.getAbsolutePath() +"/"  + listefichiers[i];
 			ArrayList<String> test = prog.extracteur.extraireMail(temp);
 			float res = pred.probaSpam(test);
+			if (res <0.3) {
+				nbHamDetected++;
+			}
+			else 
+			{ System.out.println(temp);
 			System.out.println(res);
+				if (res >0.7) {
+					nbSpamDetected++;
+					
+				}
+				else
+					doubt++;
+			}
 		}
-	
+		System.out.println("Nb de Ham :" + nbHamDetected);
+		System.out.println("Nb de Spam :" + nbSpamDetected);
+		System.out.println("Nb de Doutes :" + doubt);
 	}
 
 }
