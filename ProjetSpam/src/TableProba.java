@@ -21,7 +21,7 @@ public class TableProba extends HashMap<String,Float> implements Serializable {
 	public final int LIM_INF_MOTS = 5;
 	
 /** probabilité minimale attribuable à un jeton **/
-	public final float PROBA_MIN = (float)0.01;
+	public final float PROBA_MIN = (float)0.02;
 	
 /** probabilité maximale attribuable à un jeton **/
 	public final float PROBA_MAX = (float)0.99;
@@ -80,7 +80,6 @@ public class TableProba extends HashMap<String,Float> implements Serializable {
 						//pjh : prob que le jeton appartienne au mail sachant que ce mail est un ham
 						float pjh = Math.min(1.f,(float)occHam/NbHam);
 						float psj = Math.max( Math.min(pjs/(pjs+pjh), PROBA_MAX) , PROBA_MIN ); 
-						//System.out.println(psj);
 						this.put(jeton,psj);
 					}
 				}

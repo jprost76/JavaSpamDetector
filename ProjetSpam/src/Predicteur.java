@@ -74,6 +74,7 @@ public class Predicteur {
 		float prodSpam = 1;
 		float prodHam = 1;
 		for (int i=0;i<NB_MOTS_SIGNIFICATIFS;i++){
+			//System.out.println(listeProba[i]);
 			prodSpam = prodSpam * listeProba[i];
 			prodHam = prodHam * (1-listeProba[i]); 
 		}

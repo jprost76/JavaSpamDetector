@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class Program {
@@ -78,22 +79,39 @@ public class Program {
 		return predicteur;
 	}
 	
-	/**
-	 * @param args
-	 */
+	/**retourne la table de probabilité de l'attribut prédicteur,
+	 *  ou null si le prédicteur n'est pas initialisé**/
+	public TableProba getTProba(){
+		if (predicteur != null) {
+			return predicteur.getTProba();
+		} else
+			return null; 
+	}
+
+	public TableOccur getTableHam() {
+		return toccurHam;
+	}
+	
+	public TableOccur getTableSpam() {
+		return toccurSpam;
+	}
+	
+	public Extracteur getExtracteur() {
+		return extracteur;
+	}
+	
 	public static void main(String[] args) {
 		Program prog = new Program();
 		//chargement de la table d'occurence des Spam
 		try {
 			prog.loadTableSpam();
-			//System.out.println("table Spam :");
-			//prog.toccurSpam.AfficherTrier();
+			System.out.println("table Spam chargée");
 		}
 		catch (FileNotFoundException exf) {
-			System.out.println("fichier non trouv�");
+			System.out.println("fichier "+prog.PATH_SPAM+" non trouv�");
 		}
 		catch (ClassNotFoundException exc) {
-			System.out.println("fichier non valide");
+			System.out.println("fichier "+prog.PATH_SPAM+" non valide");
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
@@ -101,34 +119,76 @@ public class Program {
 		// chargement de la table d'occurence des Ham
 		try {
 			prog.loadTableHam();
-			System.out.println("table Ham :");
-			prog.toccurHam.AfficherTrier();
+			System.out.println("table Ham chargée");
 		}
 		catch (FileNotFoundException exf) {
-			System.out.println("fichier non trouvé");
+			System.out.println("fichier "+prog.PATH_HAM+" non trouvé");
 		}
 		catch (ClassNotFoundException exc) {
-			System.out.println("fichier non valide");
+			System.out.println("fichier" +prog.PATH_HAM+" non valide");
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		
-		Predicteur pred = prog.setPredicteur();
-		//affichage de la table de probabilité
-		//prog.getPredicteur().getTProba().AfficherTrier(400);
-		File repertoire = new File("src/Spam");
-		String [] listefichiers; 
-		listefichiers=repertoire.list(); 
-		System.out.println(listefichiers.length);
-		for (int i=0;i<listefichiers.length;i++)
-		{
-			String temp = repertoire.getAbsolutePath() +"/"  + listefichiers[i];
-			ArrayList<String> test = prog.extracteur.extraireMail(temp);
-			prog.getPredicteur().AfficherJetonsTriees(test);
-			float res = pred.probaSpam(test);
-			System.out.println("probabilité que le mail soit un spam : "+res);
+		prog.setPredicteur();
+		
+		Scanner sc = new Scanner(System.in);
+		int choix = 0;
+		while (choix !=5) {
+			System.out.println("Que voulez vous faire :");
+			System.out.println("1 : afficher la table d'occurence des spam");
+			System.out.println("2 : afficher la table d'occurence des ham");
+			System.out.println("3 : afficher la table de probabilité");
+			System.out.println("4 : Déterminer la probabilité d'un mail");
+			System.out.println("5 : Fin");
+			while ((choix < 1) || (choix > 4)) {
+				choix = sc.nextInt();
+			}
+			switch (choix) {
+			case 1 : {
+				prog.getTableSpam().AfficherTrier();
+				System.out.printf(String.format("\nnombre de mots dans la table : %d\n\n",prog.getTableSpam().size()));
+				choix = 0;
+			}
+				break;
+			case 2 : {
+				prog.getTableHam().AfficherTrier();
+				System.out.printf(String.format("\nnombre de mots dans la table : %d\n\n",prog.getTableHam().size()));
+				choix = 0;
+			}
+				break;
+			case 3 : {
+				int n = prog.getTProba().size();
+				System.out.printf(String.format("il y a %d dans la table, combien souhaitez-vous en afficher?",n));
+				int naff = sc.nextInt(); 
+				prog.getTProba().AfficherTrier(naff);
+				System.out.printf(String.format("\n \n"));
+				choix = 0;
+			}
+				break;
+			case 4 : {
+				String nomFic = null;
+				// un fichier qui n'existe pas!
+				File ftemp = new File("ùéùéùéùéù  ààà ùéù  à  àà àà");
+				while(!ftemp.exists()) {
+					System.out.println("\nIndique le chemin du fichier à traiter\n");
+					nomFic = sc.nextLine();
+					ftemp = new File(nomFic);
+				}
+				ArrayList<String> mail = prog.getExtracteur().extraireMail(nomFic);
+				System.out.println("\n jetons présent dans le mail et leur probabilités : \n");
+				prog.getPredicteur().AfficherJetonsTriees(mail);
+				float prob = prog.getPredicteur().probaSpam(mail);
+				System.out.println("\nla probabilité que ce mail soit un spam est de : "+prob+"\n");
+				choix = 0;
+			} break;
+			default : ;
+			}
 		}
+		return;
 	}
+	
+		
 
 }
