@@ -6,19 +6,16 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// fichier mail pour tester : src/Spam/1.txt
 
 public class Program {
 	
 	/** chemin d'accès au fichier de la table d'occurence des Spam **/
 	private final  String PATH_SPAM = "res/TableSpam";
 	
-	private final  static String CORPUS_SPAM = "corpus/Spam";
 	/** chemin d'accès au fichier de la table d'occurence des Ham **/
 	private final  String PATH_HAM = "res/TableHam";
 	
-	private final  static String CORPUS_HAM = "corpus/Ham";
-	/** chemin d'accès au rep de test **/
-	private final static  String PATH_TEST = "src/Spam/1.txt";
 	
 	private TableOccur toccurSpam;
 	
@@ -41,7 +38,6 @@ public class Program {
 	public void remplirTableHam(File fic) {
 		extracteur.extraireCorpus(fic, this.toccurHam);
 	}
-	
 	
 	
 	/** charge la table d'occurence pour les spam stockée dans le dossier res/ **/
@@ -141,6 +137,7 @@ public class Program {
 		
 		prog.setPredicteur();
 		
+		@SuppressWarnings("resource")
 		Scanner sc = new Scanner(System.in);
 		int choix = 0;
 		while (choix !=7) {
