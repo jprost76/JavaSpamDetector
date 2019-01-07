@@ -96,6 +96,14 @@ public class Program {
 		return toccurSpam;
 	}
 	
+	public void setTableHam(TableOccur table) {
+		toccurHam = table;
+	}
+	
+	public void setTableSpam(TableOccur table) {
+		toccurSpam = table;
+	}
+	
 	public Extracteur getExtracteur() {
 		return extracteur;
 	}
@@ -135,14 +143,16 @@ public class Program {
 		
 		Scanner sc = new Scanner(System.in);
 		int choix = 0;
-		while (choix !=5) {
+		while (choix !=7) {
 			System.out.println("Que voulez vous faire :");
 			System.out.println("1 : afficher la table d'occurence des spam");
 			System.out.println("2 : afficher la table d'occurence des ham");
 			System.out.println("3 : afficher la table de probabilité");
 			System.out.println("4 : Déterminer la probabilité d'un mail");
-			System.out.println("5 : Fin");
-			while ((choix < 1) || (choix > 4)) {
+			System.out.println("5 : Charger un nouveau corpus de spam");
+			System.out.println("6 : Charger un nouveau corpus de ham");
+			System.out.println("7 : Fin");
+			while ((choix < 1) || (choix > 7)) {
 				choix = sc.nextInt();
 			}
 			switch (choix) {
@@ -181,6 +191,51 @@ public class Program {
 				prog.getPredicteur().AfficherJetonsTriees(mail);
 				float prob = prog.getPredicteur().probaSpam(mail);
 				System.out.println("\nla probabilité que ce mail soit un spam est de : "+prob+"\n");
+				choix = 0;
+			} break;
+			case 5 : {
+				File rep=null;
+				boolean ficok=false;
+				while (!ficok) {
+					System.out.println("Veuillez saisir le chemin du repertoire du corpus");
+					String str = sc.nextLine();
+					rep = new File(str);
+					if (rep.exists())
+						ficok=true;
+				}
+				Extracteur ex = prog.getExtracteur();
+				ex.extraireCorpus(rep,ex.toccurSpam);
+				File f = new File(prog.PATH_SPAM);
+				ex.toccurSpam.save(f);
+				prog.setTableSpam(ex.toccurSpam);
+				try {
+					prog.getPredicteur().setTProba(new TableProba(prog.getTableSpam(),prog.getTableHam()));
+				} catch (TableNonInitException e) {
+					e.printStackTrace();
+				}
+				choix = 0;
+			} break;
+			case 6 : {
+				File rep=null;
+				boolean ficok=false;
+				while (!ficok) {
+					System.out.println("Veuillez saisir le chemin du repertoire du corpus");
+					String str = sc.nextLine();
+					rep = new File(str);
+					if (rep.exists())
+						ficok=true;
+				}
+				Extracteur ex = prog.getExtracteur();
+				ex.extraireCorpus(rep,ex.toccurHam);
+				File f = new File(prog.PATH_HAM);
+				//sauvegarde de la table
+				ex.toccurHam.save(f);
+				prog.setTableHam(ex.toccurHam);
+				try {
+					prog.getPredicteur().setTProba(new TableProba(prog.getTableSpam(),prog.getTableHam()));
+				} catch (TableNonInitException e) {
+					e.printStackTrace();
+				}
 				choix = 0;
 			} break;
 			default : ;
