@@ -1,0 +1,176 @@
+=====================================================
+version 2
+
+=====================================================
+@startuml
+
+title Projet Spam - Class Diagram
+
+
+class Mail{
+    +liste_mots : ListeMots
+}
+class ListeMots {
+    +listemots : ArrayList<Mots>
+    +ListeMots(fic : Fichier)
+}
+class Mots {
+    +nom : String
+}
+class TableHash {
+ +tablehash : HashMap 
+ +remplir()
+ +vider()
+ +actualiser()
+ +estpresent()
+}
+class TableOccur {
+    nbMail : Integer
+    +obtenirOccurence(mot :Mots) : Integer
+    +estpresent(mot : Mots):Boolean
+}
+class TableProba {
+    +calculerProba(t1,t2 : TableOccur)
+    +obtenirProba(mot : Mots) : Real
+}
+
+class Predicteur {
+    +tproba : TableProba
+    +probaSpam(mail : Mail,t : TableProba) : Real
+}
+
+class Extracteur {
+    toccur : TableOccur
+    extraire(mail : Mail) : void
+}
+
+TableHash <|-- TableOccur
+TableHash  <|-- TableProba
+
+Predicteur--Mail
+Mots -- TableOccur
+Mail -- Extracteur
+Mots --* ListeMots
+ListeMots --* Mail
+TableOccur --* Extracteur
+TableProba --* Predicteur
+@enduml
+
+
+===============================================
+
+diagramme classe v3, jean, 25/11/2018
+
+===============================================
+
+ @startuml
+
+title Projet Spam - Class Diagram
+
+
+class Mail{
+    -listeMots : ArrayList<String>
+    +Mail(fic : File)
+    +getListeMots() : ArrayList<String>
+}
+
+class TableHash {
+ +tablehash : HashMap 
+ +remplir()
+ +vider()
+ +actualiser()
+ +estpresent()
+}
+class TableOccur {
+    nbMail : Integer
+    +obtenirOccurence(mot : String) : Integer
+    +estPresent(mot : String) : Boolean
+}
+class TableProba {
+    +calculerProba(t1,t2 : TableOccur)
+    +obtenirProba(mot : String) : Real
+}
+
+class Predicteur {
+    -tproba : TableProba
+    -predicteur : Predicteur
+    
+    +probaSpam(mail : Mail,t : TableProba) : Real
+}
+
+class Extracteur {
+    toccur : TableOccur
+    extraire(mail : Mail) : ArrayList<String>
+}
+
+TableHash <|-- TableOccur
+TableHash  <|-- TableProba
+
+Predicteur--Mail
+Mail -- Extracteur
+TableOccur --* Extracteur
+TableProba --* Predicteur
+@enduml
+
+===============================================
+
+diagramme classe v4, edouard, 01/12/2018
+
+===============================================
+
+@startuml
+title Projet Spam - Class Diagram
+
+
+class Mail{
+    -listeMots : ArrayList<String>
+    +Mail(fic : File)
+    +getListeMots() : ArrayList<String>
+}
+
+abstract class HashMap{
+
+}
+
+class TableOccur {
+    +nbMail : Integer
+    +TableOccur() 
+    +obtenirOccurence(mot : String) : Entier
+    +estPresent(mot : String) : Boolean
+    +setNbmail( pnbmail : Entier) : void
+    +getNbmail( ) : Entier
+}
+class TableProba {
+    +TableProba(tableSpam : TableOccur ,tableHam : TableOccur )
+    +obtenirProba(mot : String) : Reel
+    +estPresent(pmot : String) : booleen 
+}
+
+class Predicteur {
+    -tproba : TableProba
+    +static final Entier NB_MOTS_SIGNIFICATIFS = 15;
+    +static final Real DEFAULT_PROB = 0.4
+    +Predicteur(t : TableProba)
+    +setTProba(t :TableProba) : void
+    +probaSpam( mail : ArrayList<String> ) : Reel
+}
+
+class Extracteur {
+    +toccurHam : TableOccur
+    +toccurSpam : TableOccur
+    +Extracteur()
+    +extraire(pfichier : String ,toccur : TableOccur ) : void
+    +extraireCorpus(repertoire : fichier ,toccur : TableOccur ) : void
+    +extraireMail(pmail : String ) : TableOccur 
+    +pretraitement(mot : String ) : Boolean
+
+}
+
+HashMap <|-- TableOccur
+HashMap  <|-- TableProba
+
+Predicteur--Mail
+Mail -- Extracteur
+TableOccur --* Extracteur
+TableProba --* Predicteur
+@enduml

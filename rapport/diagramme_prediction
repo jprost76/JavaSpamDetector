@@ -1,0 +1,35 @@
+@startuml
+title Evaluation d'un mail
+
+
+actor utilisateur
+
+utilisateur -> Program : CalculerProbaSpam(nomFichier)
+activate Program
+
+Program -> Extracteur : extraire(nomFic)
+activate Extracteur
+Extracteur --> Program
+deactivate Extracteur
+Program -> Prédicteur : ProbaSpam(listeMots)
+activate Prédicteur
+
+loop for each mot in listeMots
+
+Prédicteur -> TableProba : estPrésent(mot)
+activate TableProba
+TableProba --> Prédicteur 
+alt estPrésent(mot)
+Prédicteur -> TableProba: obtenirProba(mot)
+TableProba --> Prédicteur 
+deactivate TableProba
+else
+end
+end
+Prédicteur --> Program
+deactivate Prédicteur
+Program --> utilisateur
+
+deactivate Program
+@enduml
+
